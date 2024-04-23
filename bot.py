@@ -38,13 +38,18 @@ def predict(message):
         bot.send_message(message.chat.id,"No such NASDAQ name.")
         
     else:
-        bot.send_message(message.chat.id,"AI is training...")
-        data,length = manager.seq_model(input_text)
-        print(data) 
-        print(type(data))
-        file = manager.draw_graph(length,message.chat.id,data,f"Prediction for {input_text} in the next 60 days",True)
+        try:
+            bot.send_message(message.chat.id,"AI is training...")
+            data,length = manager.seq_model(input_text)
+            print(data) 
+            print(type(data))
+            file = manager.draw_graph(length,message.chat.id,data,f"Prediction for {input_text} in the next 60 days",True)
 
-        bot.send_photo(message.chat.id, open(file,"rb"))
+            bot.send_photo(message.chat.id, open(file,"rb"))
+        except:
+            bot.send_photo(message.chat.id, open(file,"rb"))
+
+
 
 @bot.message_handler(commands=['history_NASDAQ'])
 def history(message):
@@ -95,4 +100,4 @@ def set_user_colour(message):
     
     
 
-bot.infinity_polling(timeout=100)
+bot.infinity_polling(timeout=10000, none_stop=True)
